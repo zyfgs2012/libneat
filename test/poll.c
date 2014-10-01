@@ -1,14 +1,10 @@
 #include <sys/ioctl.h>
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h> /*文件控制*/
-#include <sys/time.h> /*时间方面的函数*/
-#include <errno.h> /*有关错误方面的宏*/
+#include <sys/time.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include<sys/poll.h> //poll()
+#include <sys/poll.h>
 
 int main() {
 	int ret,nread;
@@ -28,13 +24,14 @@ int main() {
 			continue;
 		} else if(event.revents & POLLIN){
 			ioctl(0,FIONREAD,&nread);
-			nread = read(0,buffer,nread);
 			if(0 == nread) {
 				printf("Read over!\n");
 				break;
 			}
+			memset(buffer,0,128);
+			nread = read(0,buffer,nread);
 			printf("read %d from keyboard:%s\n",nread,buffer);
-		}	
+		}
 	}
 	return 0;
 }
