@@ -27,7 +27,7 @@ void* CThreadPool::ThreadFunc(void *pData) {
 	pTrdCtx->nThreadId = get_tid();
 	while(true) {
 		pthread_mutex_lock(&m_ThreadMutex);
-		while (m_pJobVec.size() == 0 && m_bIsRunning) {//!!! bad : continously waiting
+		while (m_pJobVec.size() == 0 && m_bIsRunning) {
 			pthread_cond_wait(&m_ThreadCond,&m_ThreadMutex);
 		}
 		if(!m_bIsRunning) {
@@ -45,7 +45,7 @@ void* CThreadPool::ThreadFunc(void *pData) {
 		pthread_mutex_unlock(&m_ThreadMutex);
 		if(pJob) {
 			pJob->Run();
-			fprintf(stderr," over\n");
+			//fprintf(stderr," over\n");
 		}
 	}
 	return NULL;
@@ -54,8 +54,8 @@ void* CThreadPool::ThreadFunc(void *pData) {
 void CThreadPool::AddJob(CJob *pJob) {
 	pthread_mutex_lock(&m_ThreadMutex);
 	m_pJobVec.push_back(pJob);
-	pthread_mutex_unlock(&m_ThreadMutex);
 	pthread_cond_signal(&m_ThreadCond);
+	pthread_mutex_unlock(&m_ThreadMutex);
 }
 
 void CThreadPool::Stop() {

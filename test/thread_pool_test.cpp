@@ -9,7 +9,7 @@ class MyJob : public CJob {
 	public:
 		void Run() {
 			printf("%s\n",(char*)m_pData);
-			sleep(10);
+			sleep(3);
 		}
 };
 
